@@ -1,4 +1,4 @@
-﻿using IPChecker.DTOS;
+﻿using IPChecker.DTOS.IP2CDTOS;
 using IPChecker.Exceptions;
 using IPChecker.Models;
 using System.Net.Http.Headers;
@@ -34,9 +34,9 @@ namespace IPChecker.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
