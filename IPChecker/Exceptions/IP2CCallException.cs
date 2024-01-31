@@ -8,8 +8,5 @@ namespace IPChecker.Exceptions
 
         public IP2CCallException(string? message) : base(message) { }
 
-        public IP2CCallException(string? message, Exception innerException) : base(message, innerException) { }
-
-        public IP2CCallException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }
