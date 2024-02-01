@@ -5,41 +5,40 @@ using System.Net.Http.Headers;
 
 namespace IPChecker.Services
 {
-    public class IP2CService
+    public interface IIP2CService
     {
-        
+        Task<IP2CDTO> Get(string ipAddress);
+    }
 
-        public async Task<IP2CDTO> Get (string ipAddress)
+    public class IP2CService : IIP2CService
+    {
+
+
+        public async Task<IP2CDTO> Get(string ipAddress)
         {
-            try
-            {
-                var url = $"https://ip2c.org/{ipAddress}";
 
-                using (HttpClient client = new HttpClient())
+            var url = $"https://ip2c.org/{ipAddress}";
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    HttpResponseMessage response = await client.GetAsync(url);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        IP2CDTO result = await response.Content.ReadAsAsync<IP2CDTO>();
-                        return result;
-                    }
-                    else
-                    {
-                        string errorMessage = await response.Content.ReadAsStringAsync();
-                        throw new IP2CCallException(errorMessage);
-                    }
+                    IP2CDTO result = await response.Content.ReadAsAsync<IP2CDTO>();
+                    return result;
                 }
+                else
+                {
+                    throw new IP2CCallException();
+                }
+
             }
-            catch (Exception)
-            {
-                throw;
-            }
+
+
         }
-
-
     }
 }

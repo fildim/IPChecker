@@ -6,7 +6,8 @@ namespace IPChecker.Services
 {
     public interface IIpAddressService
     {
-        Task<IpAddress> GetByIp(IpAddress ipAddress);
+        Task<IpAddress?> GetByIp(string ipAddress);
+        Task Set(IpAddress ipAddress);
     }
 
     public class IpAddressService : IIpAddressService
@@ -18,16 +19,16 @@ namespace IPChecker.Services
             _ipAddressRepository = ipAddressRepository;
         }
 
-        public async Task<IpAddress> GetByIp(IpAddress ipAddress)
+        public async Task<IpAddress?> GetByIp(string ipAddress)
         {
             var ip = await _ipAddressRepository.GetByIp(ipAddress);
 
-            if (ip == null)
-            {
-                throw new IPAddressNotFoundException("IP Address Not Found");
-            }
-
             return ip;
+        }
+
+        public async Task Set(IpAddress ipAddress)
+        {
+            await _ipAddressRepository.Create(ipAddress);
         }
 
     }

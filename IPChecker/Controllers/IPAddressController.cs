@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using IPChecker.DTOS.CountryDTOS;
 using IPChecker.DTOS.SearchIPAddressDTOS;
 using IPChecker.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -10,20 +11,28 @@ namespace IPChecker.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    [AllowAnonymous]
     public class IPAddressController : ControllerBase
     {
-        private readonly IIpAddressService _ipAddressService;
-        private readonly IMapper _mapper;
-        private readonly IValidator<InputIPAddressDTO> _validator;
+        private readonly IMyService _myService;
 
-        public IPAddressController(IIpAddressService ipAddressService, IMapper mapper, IValidator<InputIPAddressDTO> validator)
+        public IPAddressController(IValidator<InputIPAddressDTO> validator, IMyService myService)
         {
-            _ipAddressService = ipAddressService;
-            _mapper = mapper;
-            _validator = validator;
+            _myService = myService;
         }
 
+        [HttpGet("[action]/{ipAddress}")]
+        public async Task<ActionResult<OutputCountryDTO>> Get ([FromRoute]string ipAddress)
+        {
+            var ip = await _myService.Get(ipAddress);
 
+            if (ip == null)
+            {
+                return NotFound("Ip Address Not Found");
+            }
+            else
+            {
+                return Ok(ip);
+            }
+        } 
     }
 }

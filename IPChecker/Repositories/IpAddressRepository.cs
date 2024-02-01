@@ -8,7 +8,7 @@ namespace IPChecker.Repositories
         Task Create(IpAddress ipAddress);
         Task<List<IpAddress>> GetAll();
         Task<IpAddress?> GetById(int id);
-        Task<IpAddress?> GetByIp(IpAddress ipAddress);
+        Task<IpAddress?> GetByIp(string ipAddress);
         Task Update(IpAddress ipAddress);
     }
 
@@ -40,9 +40,9 @@ namespace IPChecker.Repositories
             return await _dbContext.IpAddresses.Include(x => x.Country).SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IpAddress?> GetByIp(IpAddress ipAddress)
+        public async Task<IpAddress?> GetByIp(string ipAddress)
         {
-            return await _dbContext.IpAddresses.Include(x => x.Country).SingleOrDefaultAsync(x => x.Id == ipAddress.Id);
+            return await _dbContext.IpAddresses.Include(x => x.Country).SingleOrDefaultAsync(x => x.Ip == ipAddress);
         }
 
         public async Task<List<IpAddress>> GetAll()
