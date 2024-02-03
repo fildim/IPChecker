@@ -37,7 +37,7 @@ namespace IPChecker.Services
                     }
                     else
                     {
-                        var fromIP2C = await _service.Get(ipAddress);
+                        var fromIP2C = await _service.OnGet(ipAddress);
 
                         ip = new IpAddress { };
 
