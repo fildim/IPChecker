@@ -6,6 +6,7 @@ namespace IPChecker.Services
     public interface IMemoryCacheService
     {
         IpAddress? Get(string ipAddress);
+        void Remove(IpAddress ipAddress);
         void Set(IpAddress ipAddress);
     }
 
@@ -32,6 +33,11 @@ namespace IPChecker.Services
 
             _memoryCache.Set(ipAddress, cacheOptions);
 
+        }
+
+        public void Remove(IpAddress ipAddress)
+        {
+            _memoryCache.Remove(ipAddress);
         }
 
 
