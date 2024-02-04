@@ -1,9 +1,11 @@
 using FluentValidation;
 using Hangfire;
+using Serilog;
 using IPChecker.DTOS.SearchIPAddressDTOS;
 using IPChecker.Models;
 using IPChecker.Services;
 using IPChecker.Validators;
+using IPChecker.Middleware;
 
 namespace IPChecker
 {
@@ -25,7 +27,9 @@ namespace IPChecker
 
             var server = new BackgroundJobServer();
 
-            RecurringJob.AddOrUpdate(() => new UpdateBackgroundService().Update(), Cron.Hourly);
+            //RecurringJob.AddOrUpdate(() => new UpdateBackgroundService().Update(), Cron.Hourly);
+
+            builder.Services.AddTransient<LoggingMiddleware>();
 
             builder.Services.AddHttpClient();
             
@@ -34,6 +38,13 @@ namespace IPChecker
             builder.Services.AddControllers();
 
             builder.Services.AddScoped<IValidator<InputIPAddressDTO>, IPAddressInputValidator>();
+
+            builder.Services.AddAutoMapper(System.Reflection.Assembly.GetExecutingAssembly());
+
+            builder.Host.UseSerilog((context, config) =>
+            {
+                config.ReadFrom.Configuration(context.Configuration);
+            });
 
 
 
