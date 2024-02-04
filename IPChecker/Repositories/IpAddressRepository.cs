@@ -25,6 +25,7 @@ namespace IPChecker.Repositories
 
         public async Task Create(IpAddress ipAddress)
         {
+            ipAddress.CreatedAt = DateTime.UtcNow;
             _dbContext.IpAddresses.Add(ipAddress);
             await _dbContext.SaveChangesAsync();
         }

@@ -6,6 +6,7 @@ using IPChecker.Models;
 using IPChecker.Services;
 using IPChecker.Validators;
 using IPChecker.Middleware;
+using Microsoft.EntityFrameworkCore;
 
 namespace IPChecker
 {
@@ -18,6 +19,10 @@ namespace IPChecker
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.AddDbContext<IpcheckerDbContext>(c => c.UseSqlServer(builder.Configuration.GetConnectionString("IPCHECKERDB")));
+
+            
 
             GlobalConfiguration.Configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
