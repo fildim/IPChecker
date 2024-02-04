@@ -41,9 +41,9 @@ namespace IPChecker.Services
                     {
                         var ip = await _iP2CService.OnGet(x.Ip);
 
-                        if (x.Country.Name != ip.Country || x.Country.TwoLetterCode != ip.TwoLetterCode || x.Country.ThreeLetterCode != ip.ThreeLetterCode)
+                        if (x.Country.Name != ip.CountryName || x.Country.TwoLetterCode != ip.TwoLetterCode || x.Country.ThreeLetterCode != ip.ThreeLetterCode)
                         {
-                            x.Country.Name = ip.Country;
+                            x.Country.Name = ip.CountryName;
                             x.Country.TwoLetterCode = ip.TwoLetterCode;
                             x.Country.ThreeLetterCode = ip.ThreeLetterCode;
                             x.UpdatedAt = now;

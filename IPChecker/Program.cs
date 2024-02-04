@@ -7,6 +7,7 @@ using IPChecker.Services;
 using IPChecker.Validators;
 using IPChecker.Middleware;
 using Microsoft.EntityFrameworkCore;
+using IPChecker.Repositories;
 
 namespace IPChecker
 {
@@ -51,6 +52,15 @@ namespace IPChecker
                 config.ReadFrom.Configuration(context.Configuration);
             });
 
+            builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+            builder.Services.AddScoped<IIpAddressRepository, IpAddressRepository>();
+
+            builder.Services.AddScoped<ICountryService,  CountryService>();
+            builder.Services.AddScoped<IIpAddressService, IpAddressService>();
+            builder.Services.AddScoped<IIP2CService, IP2CService>();
+            builder.Services.AddScoped<IMemoryCacheService, MemoryCacheService>();
+            builder.Services.AddScoped<IMyService, MyService>();
+            
 
 
 
@@ -59,6 +69,7 @@ namespace IPChecker
 
             // Configure the HTTP request pipeline.
 
+            
 
             app.UseHttpsRedirection();
 
@@ -68,6 +79,8 @@ namespace IPChecker
             {
                 endpoints.MapControllers();
             });
+
+            app.UseMiddleware<LoggingMiddleware>();
 
             app.Run();
         }

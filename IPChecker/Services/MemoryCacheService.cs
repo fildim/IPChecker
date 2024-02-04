@@ -7,7 +7,7 @@ namespace IPChecker.Services
     {
         IpAddress? Get(string ipAddress);
         void Remove(IpAddress ipAddress);
-        void Set(IpAddress ipAddress);
+        void Set(IpAddress ipAddress, string ip);
     }
 
     public class MemoryCacheService : IMemoryCacheService
@@ -27,11 +27,11 @@ namespace IPChecker.Services
             return data;
         }
 
-        public void Set(IpAddress ipAddress)
+        public void Set(IpAddress ipAddress, string ip)
         {
             var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(2));
 
-            _memoryCache.Set(ipAddress, cacheOptions);
+            _memoryCache.Set(ip, ipAddress, cacheOptions);
 
         }
 

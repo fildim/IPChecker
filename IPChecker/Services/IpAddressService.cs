@@ -1,6 +1,7 @@
 ﻿using IPChecker.Exceptions;
 using IPChecker.Models;
 using IPChecker.Repositories;
+using System.Net;
 
 namespace IPChecker.Services
 {
@@ -13,10 +14,12 @@ namespace IPChecker.Services
     public class IpAddressService : IIpAddressService
     {
         private readonly IIpAddressRepository _ipAddressRepository;
+        
 
         public IpAddressService(IIpAddressRepository ipAddressRepository)
         {
             _ipAddressRepository = ipAddressRepository;
+            
         }
 
         public async Task<IpAddress?> GetByIp(string ipAddress)
@@ -25,6 +28,8 @@ namespace IPChecker.Services
 
             return ip;
         }
+
+        
 
         public async Task Set(IpAddress ipAddress)
         {

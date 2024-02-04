@@ -28,25 +28,18 @@ namespace IPChecker.Services
         {
             var httpRequestMessage = new HttpRequestMessage(
                 HttpMethod.Get,
-                $"https://ip2c.org/{ipAddress}")
-            {
-                Headers =
-                {
-                    {HeaderNames.Accept, "text" },
-                    {HeaderNames.UserAgent, "HttpRequestSample" }
-                }
-            };
+                $"https://ip2c.org/{ipAddress}");
 
-            var httpClient = _httpClientFactory.CreateClient();
+            using var httpClient = _httpClientFactory.CreateClient();
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
             if (httpResponseMessage.IsSuccessStatusCode)
             {
-                using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync();
+                var content = await httpResponseMessage.Content.ReadAsStringAsync();
 
-                var ip = new IP2CDTO() { };
+                var values = content.Split(';');
 
-                ip = await JsonSerializer.DeserializeAsync<IP2CDTO>(contentStream);
+                var ip = new IP2CDTO() { TwoLetterCode = values[1], ThreeLetterCode = values[2], CountryName = values[3] };
 
                 return ip;
             }
