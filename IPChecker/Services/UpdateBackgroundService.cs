@@ -1,4 +1,4 @@
-﻿using Hangfire;
+﻿ using Hangfire;
 using IPChecker.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,57 +8,70 @@ namespace IPChecker.Services
     {
 
         private readonly IpcheckerDbContext _dbContext;
-        private readonly IP2CService _iP2CService;
-        private readonly MemoryCacheService _memoryCacheService;
+        private readonly IIP2CService _iP2CService;
+        private readonly IMemoryCacheService _memoryCacheService;
+        private readonly ILogger<UpdateBackgroundService> _logger;
 
         public UpdateBackgroundService(
-            IpcheckerDbContext dbContext, IP2CService iP2CService, MemoryCacheService memoryCacheService)
+            IpcheckerDbContext dbContext, 
+            IIP2CService iP2CService, 
+            IMemoryCacheService memoryCacheService, 
+            ILogger<UpdateBackgroundService> logger)
         {
             _dbContext = dbContext;
             _iP2CService = iP2CService;
             _memoryCacheService = memoryCacheService;
+            _logger = logger;
         }
 
-        public void Update()
+        public async Task Update()
         {
-
-            var now = DateTime.UtcNow;
-            var batch = 100;
-            var skip = 0;
-
-            var ipBatch = _dbContext.IpAddresses.Include(x => x.Country).OrderBy(x => x.Id).ToList();
-
-            // transaction??
-
-            while (true)
+            try
             {
+                var now = DateTime.UtcNow;
+                var batch = 100;
+                var skip = 0;
 
-                var queried = ipBatch.Skip(skip).Take(batch).ToList();
+                while (true)
+                {
 
-                if (queried.Count() == 0) break;
+                    var ipBatch = await _dbContext.IpAddresses
+                        .Include(x => x.Country)
+                        .OrderBy(x => x.Id)
+                        .Skip(skip)
+                        .Take(batch)
+                        .ToListAsync();
 
-                queried.ForEach(async x =>
-                    {
-                        var ip = await _iP2CService.OnGet(x.Ip);
+                    if (ipBatch.Count() == 0) break;
 
-                        if (x.Country.Name != ip.CountryName || x.Country.TwoLetterCode != ip.TwoLetterCode || x.Country.ThreeLetterCode != ip.ThreeLetterCode)
+                    ipBatch.ForEach(async x =>
                         {
-                            x.Country.Name = ip.CountryName;
-                            x.Country.TwoLetterCode = ip.TwoLetterCode;
-                            x.Country.ThreeLetterCode = ip.ThreeLetterCode;
-                            x.UpdatedAt = now;
+                            var ip = await _iP2CService.OnGet(x.Ip);
 
-                            _dbContext.SaveChanges();
+                            if (x.Country.Name != ip.CountryName
+                                    || x.Country.TwoLetterCode != ip.TwoLetterCode
+                                    || x.Country.ThreeLetterCode != ip.ThreeLetterCode)
+                            {
+                                x.Country.Name = ip.CountryName;
+                                x.Country.TwoLetterCode = ip.TwoLetterCode;
+                                x.Country.ThreeLetterCode = ip.ThreeLetterCode;
+                                x.UpdatedAt = now;
 
-                            _memoryCacheService.Remove(x);
+                                _memoryCacheService.Remove(x);
+
+                                await _dbContext.SaveChangesAsync();
+                            }
                         }
-                    }
-                );
+                    );
 
-                skip += batch;
+                    skip += batch;
+                }
+
             }
-
-
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
         }
     }
 }
