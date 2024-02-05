@@ -1,6 +1,7 @@
 ﻿using IPChecker.DTOS.ReportDTOS;
 using IPChecker.Models;
-using Microsoft.Data.Sqlite;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.Data.SqlClient;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -23,7 +24,7 @@ namespace IPChecker.Services
 
         public async Task<List<ReportDTO>> Get(string[] codes)
         {
-            using (var connection = new SqliteConnection("DataSource=localhost\\IPCHECKER_DB;ReadWrite"))
+            using (var connection = new SqlConnection("Server = LOCALHOST\\SQLEXPRESS; Database = IPCHECKER_DB; Trusted_Connection = True; TrustServerCertificate = True; "))
             {
                 var resultDtos = new List<ReportDTO>();
 
