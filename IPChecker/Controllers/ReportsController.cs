@@ -20,12 +20,10 @@ namespace IPChecker.Controllers
             _mapper = mapper;
         }
 
-
-        public async Task<ActionResult<List<ReportDTO>>> Get (string[] codes)
+        [HttpGet("[action]/{codes}")]
+        public async Task<ActionResult<List<ReportDTO>>> Get ([FromRoute]string[] codes)
         {
             var report = await _reportService.Get(codes);
-
-           var reportDto = _mapper.Map<ReportDTO>(report);
 
             if (report.Count() == 0)
             {
@@ -33,7 +31,7 @@ namespace IPChecker.Controllers
             }
             else
             {
-                return Ok(reportDto);
+                return Ok(report);
             }
 
         }

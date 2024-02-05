@@ -4,6 +4,6 @@
     {
         public string CountryName { get; set; }
         public int AddressesCount { get; set; }
-        public DateTime LastAsdressUpdated { get; set; }
+        public DateTime LastAddressUpdated { get; set; }
     }
 }
