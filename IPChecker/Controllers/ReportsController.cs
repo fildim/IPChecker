@@ -12,12 +12,12 @@ namespace IPChecker.Controllers
     public class ReportsController : ControllerBase
     {
         private readonly IReportService _reportService;
-        private readonly IMapper _mapper;
+        
 
-        public ReportsController(IReportService reportService, IMapper mapper)
+        public ReportsController(IReportService reportService)
         {
             _reportService = reportService;
-            _mapper = mapper;
+            
         }
 
         [HttpGet("[action]/{codes}")]

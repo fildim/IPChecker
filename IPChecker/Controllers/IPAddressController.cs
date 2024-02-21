@@ -15,13 +15,13 @@ namespace IPChecker.Controllers
     {
         private readonly IMyService _myService;
 
-        public IPAddressController(IValidator<InputIPAddressDTO> validator, IMyService myService)
+        public IPAddressController(IMyService myService)
         {
             _myService = myService;
         }
 
         [HttpGet("[action]/{ipAddress}")]
-        public async Task<ActionResult<OutputCountryDTO>> Get ([FromRoute]string ipAddress)
+        public async Task<ActionResult<OutputCountryDTO>> Get([FromRoute] string ipAddress)
         {
             var ip = await _myService.Get(ipAddress);
 
@@ -33,6 +33,6 @@ namespace IPChecker.Controllers
             {
                 return Ok(ip);
             }
-        } 
+        }
     }
 }

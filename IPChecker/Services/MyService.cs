@@ -44,16 +44,27 @@ namespace IPChecker.Services
                     {
                         var fromIP2C = await _service.OnGet(ipAddress);
 
-                        var country = await _countryService.GetCountryByTwoLetterCode(fromIP2C.TwoLetterCode);
+                        var country = await _countryService
+                            .GetCountryByTwoLetterCode(fromIP2C.TwoLetterCode);
 
                         if (country == null)
                         {
-                            country = new Country { Name = fromIP2C.CountryName, TwoLetterCode = fromIP2C.TwoLetterCode, ThreeLetterCode = fromIP2C.ThreeLetterCode };
+                            country = new Country
+                            {
+                                Name = fromIP2C.CountryName,
+                                TwoLetterCode = fromIP2C.TwoLetterCode,
+                                ThreeLetterCode = fromIP2C.ThreeLetterCode
+                            };
+
                             await _countryService.Set(country);
                         }
 
 
-                        ip = new IpAddress { CountryId = country.Id, Ip = ipAddress };
+                        ip = new IpAddress
+                        {
+                            CountryId = country.Id,
+                            Ip = ipAddress
+                        };
 
                         await _ipAddressService.Set(ip);
 
@@ -61,10 +72,15 @@ namespace IPChecker.Services
                     }
                 }
 
-                return new OutputCountryDTO { Name = ip.Country.Name, TwoLetterCode = ip.Country.TwoLetterCode, ThreeLetterCode = ip.Country.ThreeLetterCode };
+                return new OutputCountryDTO
+                {
+                    Name = ip.Country.Name,
+                    TwoLetterCode = ip.Country.TwoLetterCode,
+                    ThreeLetterCode = ip.Country.ThreeLetterCode
+                };
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return null;

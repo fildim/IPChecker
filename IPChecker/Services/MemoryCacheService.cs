@@ -29,7 +29,8 @@ namespace IPChecker.Services
 
         public void Set(IpAddress ipAddress, string ip)
         {
-            var cacheOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(2));
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromHours(2));
 
             _memoryCache.Set(ip, ipAddress, cacheOptions);
 

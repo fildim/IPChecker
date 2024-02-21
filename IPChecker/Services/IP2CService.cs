@@ -28,7 +28,8 @@ namespace IPChecker.Services
         {
             var httpRequestMessage = new HttpRequestMessage(
                 HttpMethod.Get,
-                $"https://ip2c.org/{ipAddress}");
+                $"https://ip2c.org/{ipAddress}"
+                );
 
             using var httpClient = _httpClientFactory.CreateClient();
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
@@ -39,7 +40,12 @@ namespace IPChecker.Services
 
                 var values = content.Split(';');
 
-                var ip = new IP2CDTO() { TwoLetterCode = values[1], ThreeLetterCode = values[2], CountryName = values[3] };
+                var ip = new IP2CDTO()
+                {
+                    TwoLetterCode = values[1],
+                    ThreeLetterCode = values[2],
+                    CountryName = values[3]
+                };
 
                 return ip;
             }

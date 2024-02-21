@@ -60,7 +60,7 @@ namespace IPChecker.Services
                         command.CommandText = string.Format(query, string.Empty);
                     }
 
-                    using (var reader =await command.ExecuteReaderAsync())
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {

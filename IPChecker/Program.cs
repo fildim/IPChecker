@@ -33,7 +33,7 @@ namespace IPChecker
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
                 .UseMemoryStorage());
-                //.UseSqlServerStorage(builder.Configuration.GetConnectionString("IPCHECKERDB")));
+            //.UseSqlServerStorage(builder.Configuration.GetConnectionString("IPCHECKERDB")));
 
 
             builder.Services.AddHangfireServer();
@@ -67,9 +67,6 @@ namespace IPChecker
             builder.Services.AddScoped<IMemoryCacheService, MemoryCacheService>();
             builder.Services.AddScoped<IMyService, MyService>();
             builder.Services.AddScoped<IReportService, ReportService>();
-
-
-
 
 
             var app = builder.Build();

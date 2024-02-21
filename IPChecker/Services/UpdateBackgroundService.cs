@@ -1,4 +1,4 @@
-﻿ using Hangfire;
+﻿using Hangfire;
 using IPChecker.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +13,9 @@ namespace IPChecker.Services
         private readonly ILogger<UpdateBackgroundService> _logger;
 
         public UpdateBackgroundService(
-            IpcheckerDbContext dbContext, 
-            IIP2CService iP2CService, 
-            IMemoryCacheService memoryCacheService, 
+            IpcheckerDbContext dbContext,
+            IIP2CService iP2CService,
+            IMemoryCacheService memoryCacheService,
             ILogger<UpdateBackgroundService> logger)
         {
             _dbContext = dbContext;
@@ -48,9 +48,12 @@ namespace IPChecker.Services
                         {
                             var ip = await _iP2CService.OnGet(x.Ip);
 
-                            if (x.Country.Name != ip.CountryName
-                                    || x.Country.TwoLetterCode != ip.TwoLetterCode
-                                    || x.Country.ThreeLetterCode != ip.ThreeLetterCode)
+                            if
+                                (
+                                x.Country.Name != ip.CountryName
+                                || x.Country.TwoLetterCode != ip.TwoLetterCode
+                                || x.Country.ThreeLetterCode != ip.ThreeLetterCode
+                                )
                             {
                                 x.Country.Name = ip.CountryName;
                                 x.Country.TwoLetterCode = ip.TwoLetterCode;
